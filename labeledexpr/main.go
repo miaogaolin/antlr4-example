@@ -23,8 +23,10 @@ import (
 //	}
 //}
 // ```
+// 新的想法：
+// BaseLabeledExprVisitor 不会帮你走语法树，所有的步骤需要自己调用。
+// 例如： Visit 和 VisitProg 必须写
 type evalVisitor struct {
-	// 或 LabeledExprVisitor
 	BaseLabeledExprVisitor
 	memory map[string]int
 }
@@ -61,11 +63,6 @@ func (v *evalVisitor) VisitAssign(ctx *AssignContext) interface{} {
 	value := v.Visit(ctx.Expr()) // 计算右侧表达式的值
 	v.memory[id] = value.(int)   // 将这个映射关系存储在计算器的 “内存” 中
 	return value
-}
-
-// Visit a parse tree produced by LabelExprParser#blank.
-func (v *evalVisitor) VisitBlank(ctx *BlankContext) interface{} {
-	return 0
 }
 
 // Visit a parse tree produced by LabelExprParser#parens.
